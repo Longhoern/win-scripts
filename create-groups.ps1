@@ -9,7 +9,7 @@ function Create-ADGroupIfNotExists {
         [string]$GroupScope = "Global"
     )
     
-    if (-not (Get-ADGroup -Filter {Name -eq $GroupName})) {
+    if (-not (Get-ADGroup -Filter "Name -eq '$GroupName'")) {
         New-ADGroup -Name $GroupName -GroupCategory $GroupCategory -GroupScope $GroupScope
         Write-Host "Created group: $GroupName"
     }
@@ -30,7 +30,8 @@ function Add-GroupMemberSafely {
         Write-Host "Added $ChildGroup under $ParentGroup"
     }
     catch {
-        Write-Error "Error adding $ChildGroup to $ParentGroup: $_"
+        $errorMessage = $_.Exception.Message
+        Write-Error "Error adding $ChildGroup to $ParentGroup - $errorMessage"
     }
 }
 
